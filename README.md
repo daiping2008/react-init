@@ -15,7 +15,7 @@
     })
     ```
    3. 安装CSS预处理器（SASS）
-    `yarn add node-sass scss-loader`
+    `yarn add node-sass sass-loader`
     之前我们设置了HTML的font-size,那么我们配置mixin.scss方便计算
     ```css
     $ration: 375 / 10;
