@@ -23,7 +23,7 @@
       @return $px / $ration + rem
     }
     ```
-   4. 重置样式文件RESET.CSS (https://meyerweb.com/eric/tools/css/reset/)
+   4. 重置样式文件[RESET.CSS](https://meyerweb.com/eric/tools/css/reset/)
    5. 引入字体图标
     [阿里巴巴矢量图](https://www.iconfont.cn/)
 3. 路由
