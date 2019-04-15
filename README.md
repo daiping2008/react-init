@@ -23,7 +23,7 @@
       @return $px / $ration + rem
     }
     ```
-   4. 重置样式文件RESET.CSS
+   4. 重置样式文件RESET.CSS (https://meyerweb.com/eric/tools/css/reset/)
    5. 引入字体图标
     [阿里巴巴矢量图](https://www.iconfont.cn/)
 3. 路由
@@ -75,14 +75,12 @@
   ```
   Store->reducer.js
   ```js
-  import {createStore, compose, applyMiddleware} from 'redux'
-  import thunk from 'redux-thunk'
-  import reducer from './reducer'
-  const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
-  const store = createStore(reducer, composeEnhancers(
-    applyMiddleware(thunk)
-  ))
-  export default store
+  import { combineReducers } from 'redux'
+  import { reducer as recommendReducer} from './recommend'
+
+  export default combineReducers({
+    recommend: recommendReducer
+  })
   ```
   组件中调用
   ```js
@@ -114,20 +112,57 @@
 
   export default connect(mapStateToProps, mapDispathcToProps)(Home)
   ```
-5. axios
+5. immutable和redux-immutable
+```js
+  yarn add immutable redux-immutable
+```
+修改redux.js
+```js
+  import { combineReducers } from 'redux-immutable'
+
+  return state.set('username', action.username)
+
+  username: state.get('recommend').get('username')
+```
+6. axios
   `yarn add axios`
   封装axios
   ```js  
   import axios from 'axios'
+  import {config} from '../config'
 
-  export const get = url => (
-    (params={}) => (
-      axios.get(url, {
-        params
-      }).then(res => {
-        let {status, data} = res
-        return status === 200 ? data : ''
-      }).catch(e => {})
-    )
-  )
+  class HTTP {
+    request(url, data, method = 'GET') {
+      return new Promise((resolve, reject) => {
+        axios({
+          url: config.baseUrl + url,
+          data,
+          method
+        }).then(res => {
+          if (res.status === 200) {
+            resolve(res.data)
+          }
+          reject()
+        }).catch(err => {
+          reject(err)
+        })
+      })
+    }
+  }
+
+  export default HTTP
   ```
+7. 创建models
+```js
+import HTTP from '../utils/http'
+
+class RecommendModel extends HTTP {
+  getBanner() {
+    return this.request('/banner')
+  }
+}
+
+export default RecommendModel
+```
+在componentDidMount调用
+
